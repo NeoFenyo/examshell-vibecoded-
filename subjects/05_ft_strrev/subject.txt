@@ -1,0 +1,21 @@
+Assignment name  : ft_strrev
+Expected files   : ft_strrev.c
+Allowed functions: (none)
+--------------------------------------------------------------------------------
+
+Écrire une fonction qui inverse une chaîne de caractères en place
+(in-place, sans allocation) et retourne un pointeur sur cette chaîne.
+
+Prototype:
+  char *ft_strrev(char *str);
+
+Exemple:
+
+  char s1[] = "Hello";
+  ft_strrev(s1);  // s1 vaut maintenant "olleH"
+
+  char s2[] = "";
+  ft_strrev(s2);  // s2 vaut toujours ""
+
+  char s3[] = "a";
+  ft_strrev(s3);  // s3 vaut toujours "a"

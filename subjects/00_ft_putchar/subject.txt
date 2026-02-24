@@ -1,0 +1,17 @@
+Assignment name  : ft_putchar
+Expected files   : ft_putchar.c
+Allowed functions: write
+--------------------------------------------------------------------------------
+
+Écrire une fonction qui affiche un caractère sur la sortie standard.
+
+Prototype:
+  void ft_putchar(char c);
+
+Exemple:
+
+  ft_putchar('H');  // affiche: H
+  ft_putchar('\n'); // affiche un retour à la ligne
+
+Note:
+  Vous devez utiliser la fonction write (man 2 write).

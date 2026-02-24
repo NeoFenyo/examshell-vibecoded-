@@ -1,0 +1,25 @@
+Assignment name  : first_word
+Expected files   : first_word.c
+Allowed functions: write
+--------------------------------------------------------------------------------
+
+Écrire un programme qui prend une chaîne de caractères en paramètre et qui
+affiche son premier mot, suivi d'un retour à la ligne ('\n').
+
+Un "mot" est une suite de caractères non-espaces et non-tabulations.
+
+Si le nombre de paramètres n'est pas 1, ou si la chaîne ne contient aucun mot,
+le programme affiche simplement un retour à la ligne.
+
+Exemples:
+
+  $> ./first_word "  Hello World  " | cat -e
+  Hello$
+  $> ./first_word "Hello" | cat -e
+  Hello$
+  $> ./first_word "   " | cat -e
+  $
+  $> ./first_word | cat -e
+  $
+  $> ./first_word "	Hello	World" | cat -e
+  Hello$

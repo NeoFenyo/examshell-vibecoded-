@@ -1,0 +1,28 @@
+Assignment name  : repeat_alpha
+Expected files   : repeat_alpha.c
+Allowed functions: write
+--------------------------------------------------------------------------------
+
+Écrire un programme qui prend une chaîne de caractères en paramètre et qui
+affiche chaque lettre autant de fois que sa position dans l'alphabet.
+
+'a' est affiché 1 fois, 'b' 2 fois, ..., 'z' 26 fois.
+'A' est affiché 1 fois, 'B' 2 fois, ..., 'Z' 26 fois.
+
+Les caractères non-alphabétiques sont affichés une seule fois.
+
+Le programme affiche un retour à la ligne ('\n') à la fin.
+
+Si le nombre de paramètres n'est pas 1, le programme affiche simplement
+un retour à la ligne.
+
+Exemples:
+
+  $> ./repeat_alpha "abc" | cat -e
+  abbccc$
+  $> ./repeat_alpha "Alex" | cat -e
+  Alllllllllllleeeeexxxxxxxxxxxxxxxxxxxxxxxx$
+  $> ./repeat_alpha "z" | cat -e
+  zzzzzzzzzzzzzzzzzzzzzzzzzz$
+  $> ./repeat_alpha " music music!" | cat -e
+   mmmmmmmmmmmmmuuuuuuuuuuuuuuuuuuuuusssssssssssssssssssiiiiiiiiicccc mmmmmmmmmmmmmuuuuuuuuuuuuuuuuuuuuusssssssssssssssssssiiiiiiiiicccc!$

@@ -1,0 +1,26 @@
+Assignment name  : ft_atoi
+Expected files   : ft_atoi.c
+Allowed functions: (none)
+--------------------------------------------------------------------------------
+
+Écrire une fonction qui convertit la représentation en chaîne de caractères
+d'un entier en une valeur de type int.
+
+Prototype:
+  int ft_atoi(const char *str);
+
+La fonction doit gérer :
+  - Les espaces blancs au début (' ', '\t', '\n', '\v', '\f', '\r')
+  - Un signe optionnel ('+' ou '-')
+  - Les chiffres qui suivent
+
+Le comportement est identique à celui de la fonction atoi de la libc.
+
+Exemples:
+
+  ft_atoi("42");       // retourne 42
+  ft_atoi("   -42");   // retourne -42
+  ft_atoi("+42");      // retourne 42
+  ft_atoi("  \t 123"); // retourne 123
+  ft_atoi("0");        // retourne 0
+  ft_atoi("   +0");    // retourne 0

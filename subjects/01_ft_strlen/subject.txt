@@ -1,0 +1,15 @@
+Assignment name  : ft_strlen
+Expected files   : ft_strlen.c
+Allowed functions: (none)
+--------------------------------------------------------------------------------
+
+Écrire une fonction qui retourne la longueur d'une chaîne de caractères.
+
+Prototype:
+  int ft_strlen(char *str);
+
+Exemple:
+
+  ft_strlen("Hello");  // retourne 5
+  ft_strlen("");        // retourne 0
+  ft_strlen("42");      // retourne 2
