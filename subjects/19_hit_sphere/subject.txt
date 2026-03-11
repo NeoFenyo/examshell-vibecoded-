@@ -1,0 +1,33 @@
+Assignment name : hit_sphere
+Expected files  : hit_sphere.c
+Allowed functions: sqrt (math.h)
+Header fourni   : #include "ray.h"
+Compiler avec   : -lm
+Prerequis       : vec_dot, vec_sub, ray
+--------------------------------------------------------------------------------
+
+Ecris une fonction qui teste si un rayon intersecte une sphere.
+
+Prototype:
+  double hit_sphere(t_vec3 center, double radius, t_ray r);
+
+- Retourne la distance t du point d'intersection le plus proche (t > 0).
+- Retourne -1.0 si le rayon ne touche pas la sphere.
+
+Mathematiquement, on resout l'equation quadratique :
+  oc = r.origin - center
+  a = dot(r.direction, r.direction)
+  b = 2.0 * dot(oc, r.direction)
+  c = dot(oc, oc) - radius * radius
+  discriminant = b*b - 4*a*c
+
+  Si discriminant < 0 : pas d'intersection → retourner -1.0
+  Sinon : t = (-b - sqrt(discriminant)) / (2*a)
+           Si t < 0 : t = (-b + sqrt(discriminant)) / (2*a)
+           Si t < 0 : retourner -1.0 (sphere derriere la camera)
+
+Exemple:
+  t_ray r = ray_create(vec3(0,0,0), vec3(0,0,-1));
+  hit_sphere(vec3(0,0,-5), 1.0, r);    // = 4.0
+  hit_sphere(vec3(0,0,-5), 0.5, r);    // = 4.5
+  hit_sphere(vec3(100,0,0), 1.0, r);   // = -1.0 (rate)

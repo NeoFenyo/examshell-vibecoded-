@@ -1,0 +1,23 @@
+Assignment name : ray_create
+Expected files  : ray_create.c
+Allowed functions: (none)
+Header fourni   : #include "ray.h" (inclut vec3.h)
+--------------------------------------------------------------------------------
+
+Ecris le constructeur pour le type t_ray :
+
+  typedef struct s_ray {
+      t_vec3 origin;      // point de depart du rayon
+      t_vec3 direction;   // direction du rayon
+  } t_ray;
+
+Prototype:
+  t_ray ray_create(t_vec3 origin, t_vec3 direction);
+
+Un rayon est une demi-droite : P(t) = origin + t * direction
+C'est la base ABSOLUE du raytracing : on tire des rayons depuis
+la camera a travers chaque pixel de l'image.
+
+Exemple:
+  t_ray r = ray_create(vec3(0,0,0), vec3(0,0,-1));
+  // rayon partant de l'origine, allant vers -Z

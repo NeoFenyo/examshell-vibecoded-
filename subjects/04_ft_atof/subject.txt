@@ -1,0 +1,23 @@
+Assignment name : ft_atof
+Expected files  : ft_atof.c
+Allowed functions: (none)
+--------------------------------------------------------------------------------
+
+Ecris une fonction qui convertit une chaine de caracteres en nombre
+a virgule flottante (double). C'est la base du parsing pour un raytracer.
+
+Prototype:
+  double ft_atof(const char *str);
+
+- La chaine peut commencer par des espaces.
+- Un seul signe '+' ou '-' est accepte.
+- Le point '.' separe la partie entiere de la decimale.
+- La conversion s'arrete au premier caractere invalide.
+
+Exemple:
+  ft_atof("3.14");      // retourne 3.14
+  ft_atof("-0.5");      // retourne -0.5
+  ft_atof("  +42.0");   // retourne 42.0
+  ft_atof("100");       // retourne 100.0
+  ft_atof(".25");        // retourne 0.25
+  ft_atof("1.2abc");    // retourne 1.2

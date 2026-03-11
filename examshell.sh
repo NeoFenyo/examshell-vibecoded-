@@ -28,37 +28,65 @@ BOLD='\033[1m'
 DIM='\033[2m'
 RESET='\033[0m'
 
-# ── Exercices (ordre) ───────────────────────────────────────────────────────
+# ── Exercices ────────────────────────────────────────────────────────────────
 EXERCISES=(
     "00_ft_putchar"
-    "01_ft_strlen"
-    "02_first_word"
-    "03_repeat_alpha"
-    "04_ft_swap"
-    "05_ft_strrev"
-    "06_ft_atoi"
+    "01_ft_putstr"
+    "02_ft_strlen"
+    "03_ft_atoi"
+    "04_ft_atof"
+    "05_ft_strcpy"
+    "06_ft_strdup"
     "07_ft_range"
     "08_ft_split"
-    "09_fprime"
+    "09_vec_create"
+    "10_vec_ops"
+    "11_vec_dot"
+    "12_vec_cross"
+    "13_vec_normalize"
+    "14_ppm_header"
+    "15_ppm_gradient"
+    "16_color_ops"
+    "17_ray_create"
+    "18_ray_at"
+    "19_hit_sphere"
+    "20_sky_color"
+    "21_normal_shade"
+    "22_diffuse_light"
+    "23_shadow_check"
+    "24_mini_rt"
 )
 
-# Noms "propres" des exercices (dossier de rendu)
 EXNAMES=(
     "ft_putchar"
+    "ft_putstr"
     "ft_strlen"
-    "first_word"
-    "repeat_alpha"
-    "ft_swap"
-    "ft_strrev"
     "ft_atoi"
+    "ft_atof"
+    "ft_strcpy"
+    "ft_strdup"
     "ft_range"
     "ft_split"
-    "fprime"
+    "vec_create"
+    "vec_ops"
+    "vec_dot"
+    "vec_cross"
+    "vec_normalize"
+    "ppm_header"
+    "ppm_gradient"
+    "color_ops"
+    "ray_create"
+    "ray_at"
+    "hit_sphere"
+    "sky_color"
+    "normal_shade"
+    "diffuse_light"
+    "shadow_check"
+    "mini_rt"
 )
 
-# Points par niveau
-LEVELS=(0 0 1 1 1 2 2 3 3 4)
-POINTS=(4 4 8 8 8 16 16 32 32 64)
+LEVELS=(0 0 0 0 0 1 1 1 1 2 2 2 2 2 3 3 3 4 4 4 4 5 5 5 5)
+POINTS=(4 4 4 4 4 8 8 8 8 12 12 12 12 12 16 16 16 20 20 20 20 28 28 28 28)
 
 TOTAL_POSSIBLE=0
 for p in "${POINTS[@]}"; do
@@ -80,7 +108,7 @@ print_header() {
     echo -e "${BLUE}║${RESET}${BOLD}${CYAN}        ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝                 ${RESET}${BLUE}║${RESET}"
     echo -e "${BLUE}║${RESET}                                                              ${BLUE}║${RESET}"
     echo -e "${BLUE}║${RESET}  ${BOLD}${YELLOW}            E X A M S H E L L   4 2${RESET}                        ${BLUE}║${RESET}"
-    echo -e "${BLUE}║${RESET}  ${DIM}        10 exercices • Moulinette exhaustive${RESET}               ${BLUE}║${RESET}"
+    echo -e "${BLUE}║${RESET}  ${DIM}       25 exercices • C basics → Raytracer${RESET}               ${BLUE}║${RESET}"
     echo -e "${BLUE}╚══════════════════════════════════════════════════════════════╝${RESET}"
     echo ""
 }

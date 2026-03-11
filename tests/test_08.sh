@@ -68,7 +68,7 @@ int main(void) {
     char buf[512], cs[64], expected[1024], got_s[1024];
     char **r;
 
-    /* NATION_DIVIDED: split by space, random words */
+    /* BASIC_SPLIT: split by space, random words */
     ok = 1;
     for (i = 0; i < N; i++) {
         int nw = 2 + (rand() % 4);
@@ -83,10 +83,10 @@ int main(void) {
         r = ft_split(buf, " "); join(r, got_s); free_split(r);
         if (strcmp(expected, got_s) != 0) { ok = 0; break; }
     }
-    if (ok) printf("PASS NATION_DIVIDED\n");
-    else printf("FAIL NATION_DIVIDED\n>%s\n<%s\n", expected, got_s);
+    if (ok) printf("PASS BASIC_SPLIT\n");
+    else printf("FAIL BASIC_SPLIT\n>%s\n<%s\n", expected, got_s);
 
-    /* TERRITORY_CARVED: split by *, lots of consecutive seps */
+    /* MULTIPLE_SEPARATORS: split by *, lots of consecutive seps */
     ok = 1;
     for (i = 0; i < N; i++) {
         buf[0] = 0;
@@ -101,10 +101,10 @@ int main(void) {
         r = ft_split(buf, "*"); join(r, got_s); free_split(r);
         if (strcmp(expected, got_s) != 0) { ok = 0; break; }
     }
-    if (ok) printf("PASS TERRITORY_CARVED\n");
-    else printf("FAIL TERRITORY_CARVED\n>%s\n<%s\n", expected, got_s);
+    if (ok) printf("PASS MULTIPLE_SEPARATORS\n");
+    else printf("FAIL MULTIPLE_SEPARATORS\n>%s\n<%s\n", expected, got_s);
 
-    /* MANDATE_BROKEN: empty charset -> whole string as one word */
+    /* EMPTY_CHARSET: empty charset -> whole string as one word */
     ok = 1;
     for (i = 0; i < N; i++) {
         len = 3 + (rand() % 10);
@@ -113,10 +113,10 @@ int main(void) {
         r = ft_split(buf, ""); join(r, got_s); free_split(r);
         if (strcmp(expected, got_s) != 0) { ok = 0; break; }
     }
-    if (ok) printf("PASS MANDATE_BROKEN\n");
-    else printf("FAIL MANDATE_BROKEN\n>%s\n<%s\n", expected, got_s);
+    if (ok) printf("PASS EMPTY_CHARSET\n");
+    else printf("FAIL EMPTY_CHARSET\n>%s\n<%s\n", expected, got_s);
 
-    /* PARTITION_FORCED: multiple delimiter characters */
+    /* CONSECUTIVE_SEPS: multiple delimiter characters */
     ok = 1;
     for (i = 0; i < N; i++) {
         strcpy(buf, "");
@@ -130,10 +130,10 @@ int main(void) {
         r = ft_split(buf, ",;:"); join(r, got_s); free_split(r);
         if (strcmp(expected, got_s) != 0) { ok = 0; break; }
     }
-    if (ok) printf("PASS PARTITION_FORCED\n");
-    else printf("FAIL PARTITION_FORCED\n>%s\n<%s\n", expected, got_s);
+    if (ok) printf("PASS CONSECUTIVE_SEPS\n");
+    else printf("FAIL CONSECUTIVE_SEPS\n>%s\n<%s\n", expected, got_s);
 
-    /* LAND_GRABBED: only separators -> empty result */
+    /* ONLY_SEPARATORS: only separators -> empty result */
     ok = 1;
     for (i = 0; i < N; i++) {
         len = 3 + (rand() % 10);
@@ -143,19 +143,19 @@ int main(void) {
         r = ft_split(buf, css); join(r, got_s); free_split(r);
         if (strlen(got_s) != 0) { ok = 0; strcpy(expected, ""); break; }
     }
-    if (ok) printf("PASS LAND_GRABBED\n");
-    else printf("FAIL LAND_GRABBED\n>(empty)\n<%s\n", got_s);
+    if (ok) printf("PASS ONLY_SEPARATORS\n");
+    else printf("FAIL ONLY_SEPARATORS\n>(empty)\n<%s\n", got_s);
 
-    /* FAMILY_SEPARATED: empty string */
+    /* EMPTY_STRING_SPLIT: empty string */
     ok = 1;
     for (i = 0; i < N; i++) {
         r = ft_split("", " "); join(r, got_s); free_split(r);
         if (strlen(got_s) != 0) { ok = 0; break; }
     }
-    if (ok) printf("PASS FAMILY_SEPARATED\n");
-    else printf("FAIL FAMILY_SEPARATED\n>(empty)\n<%s\n", got_s);
+    if (ok) printf("PASS EMPTY_STRING_SPLIT\n");
+    else printf("FAIL EMPTY_STRING_SPLIT\n>(empty)\n<%s\n", got_s);
 
-    /* RESOURCE_STOLEN: seps at beginning and end */
+    /* LEADING_TRAILING_SEPS: seps at beginning and end */
     ok = 1;
     for (i = 0; i < N; i++) {
         buf[0] = 0;
@@ -168,10 +168,10 @@ int main(void) {
         r = ft_split(buf, " "); join(r, got_s); free_split(r);
         if (strcmp(expected, got_s) != 0) { ok = 0; break; }
     }
-    if (ok) printf("PASS RESOURCE_STOLEN\n");
-    else printf("FAIL RESOURCE_STOLEN\n>%s\n<%s\n", expected, got_s);
+    if (ok) printf("PASS LEADING_TRAILING_SEPS\n");
+    else printf("FAIL LEADING_TRAILING_SEPS\n>%s\n<%s\n", expected, got_s);
 
-    /* WATER_CUT_OFF: split by tab */
+    /* TAB_SEPS: split by tab */
     ok = 1;
     for (i = 0; i < N; i++) {
         buf[0] = 0;
@@ -185,10 +185,10 @@ int main(void) {
         r = ft_split(buf, "\t"); join(r, got_s); free_split(r);
         if (strcmp(expected, got_s) != 0) { ok = 0; break; }
     }
-    if (ok) printf("PASS WATER_CUT_OFF\n");
-    else printf("FAIL WATER_CUT_OFF\n>%s\n<%s\n", expected, got_s);
+    if (ok) printf("PASS TAB_SEPS\n");
+    else printf("FAIL TAB_SEPS\n>%s\n<%s\n", expected, got_s);
 
-    /* PEOPLE_DISPLACED: no separator in string */
+    /* NO_SEPS_IN_STRING: no separator in string */
     ok = 1;
     for (i = 0; i < N; i++) {
         len = 3 + (rand() % 10);
@@ -197,10 +197,10 @@ int main(void) {
         r = ft_split(buf, " "); join(r, got_s); free_split(r);
         if (strcmp(expected, got_s) != 0) { ok = 0; break; }
     }
-    if (ok) printf("PASS PEOPLE_DISPLACED\n");
-    else printf("FAIL PEOPLE_DISPLACED\n>%s\n<%s\n", expected, got_s);
+    if (ok) printf("PASS NO_SEPS_IN_STRING\n");
+    else printf("FAIL NO_SEPS_IN_STRING\n>%s\n<%s\n", expected, got_s);
 
-    /* BORDER_CARVED: fully random strings and charsets */
+    /* RANDOM_SPLIT: fully random strings and charsets */
     ok = 1;
     for (i = 0; i < N; i++) {
         len = 5 + (rand() % 30);
@@ -211,8 +211,8 @@ int main(void) {
         r = ft_split(buf, cs); join(r, got_s); free_split(r);
         if (strcmp(expected, got_s) != 0) { ok = 0; break; }
     }
-    if (ok) printf("PASS BORDER_CARVED\n");
-    else printf("FAIL BORDER_CARVED\n>%s\n<%s\n", expected, got_s);
+    if (ok) printf("PASS RANDOM_SPLIT\n");
+    else printf("FAIL RANDOM_SPLIT\n>%s\n<%s\n", expected, got_s);
 
     return 0;
 }

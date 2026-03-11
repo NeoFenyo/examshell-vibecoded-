@@ -61,60 +61,60 @@ int main(void) {
     srand(time(NULL));
     int i; char buf[256];
 
-    /* IRON_DOME_MISS: 10 random lowercase */
+    /* BASIC_LOWERCASE: 10 random lowercase */
     for (i = 0; i < N; i++) buf[i] = 'a' + (rand() % 26);
     cs(); for (i = 0; i < N; i++) ft_putchar(buf[i]); ce();
-    test("IRON_DOME_MISS", buf, N);
+    test("BASIC_LOWERCASE", buf, N);
 
-    /* MOSSAD_TYPO: 10 random digits */
+    /* BASIC_DIGITS: 10 random digits */
     for (i = 0; i < N; i++) buf[i] = '0' + (rand() % 10);
     cs(); for (i = 0; i < N; i++) ft_putchar(buf[i]); ce();
-    test("MOSSAD_TYPO", buf, N);
+    test("BASIC_DIGITS", buf, N);
 
-    /* BIBI_STUTTER: 10 random special chars */
+    /* SPECIAL_CHARS: 10 random special chars */
     { char sp[] = "!@#$%^&*()-_=+[]{}|;:,.<>?/~"; int sl = strlen(sp);
       for (i = 0; i < N; i++) buf[i] = sp[rand() % sl];
       cs(); for (i = 0; i < N; i++) ft_putchar(buf[i]); ce();
-      test("BIBI_STUTTER", buf, N); }
+      test("SPECIAL_CHARS", buf, N); }
 
-    /* TSAHAL_MISFIRE: 10 random spaces/tabs */
+    /* WHITESPACE: 10 random spaces/tabs */
     for (i = 0; i < N; i++) buf[i] = (rand() % 2) ? ' ' : '\t';
     cs(); for (i = 0; i < N; i++) ft_putchar(buf[i]); ce();
-    test("TSAHAL_MISFIRE", buf, N);
+    test("WHITESPACE", buf, N);
 
-    /* HASBARA_STATIC: 10 random uppercase */
+    /* UPPER_CASE: 10 random uppercase */
     for (i = 0; i < N; i++) buf[i] = 'A' + (rand() % 26);
     cs(); for (i = 0; i < N; i++) ft_putchar(buf[i]); ce();
-    test("HASBARA_STATIC", buf, N);
+    test("UPPER_CASE", buf, N);
 
-    /* MERKAVA_STALL: 10 random printable */
+    /* PRINTABLE_CHARS: 10 random printable */
     for (i = 0; i < N; i++) buf[i] = 33 + (rand() % 94);
     cs(); for (i = 0; i < N; i++) ft_putchar(buf[i]); ce();
-    test("MERKAVA_STALL", buf, N);
+    test("PRINTABLE_CHARS", buf, N);
 
-    /* SHEKEL_DROPPED: 10 newlines */
+    /* NEWLINES: 10 newlines */
     for (i = 0; i < N; i++) buf[i] = '\n';
     cs(); for (i = 0; i < N; i++) ft_putchar('\n'); ce();
-    test("SHEKEL_DROPPED", buf, N);
+    test("NEWLINES", buf, N);
 
-    /* SIGNAL_JAMMED: 10 null bytes */
+    /* NULL_BYTES: 10 null bytes */
     for (i = 0; i < N; i++) buf[i] = '\0';
     cs(); for (i = 0; i < N; i++) ft_putchar('\0'); ce();
     if (cn == N) { int ok = 1; for (i = 0; i < N; i++) if (cap[i] != 0) ok = 0;
-        if (ok) printf("PASS SIGNAL_JAMMED\n");
-        else printf("FAIL SIGNAL_JAMMED\n>10 null bytes\n<data mismatch (%d bytes)\n", cn);
-    } else printf("FAIL SIGNAL_JAMMED\n>10 bytes\n<%d bytes\n", cn);
+        if (ok) printf("PASS NULL_BYTES\n");
+        else printf("FAIL NULL_BYTES\n>10 null bytes\n<data mismatch (%d bytes)\n", cn);
+    } else printf("FAIL NULL_BYTES\n>10 bytes\n<%d bytes\n", cn);
 
-    /* EILAT_OFFLINE: all 95 printable ASCII */
+    /* NORM_SCALE_X: all 95 printable ASCII */
     { int elen = 0; for (i = 32; i < 127; i++) buf[elen++] = i;
       cs(); for (i = 32; i < 127; i++) ft_putchar(i); ce();
-      if (cn == elen && memcmp(cap, buf, elen) == 0) printf("PASS EILAT_OFFLINE\n");
-      else printf("FAIL EILAT_OFFLINE\n>95 printable chars\n<%d chars\n", cn); }
+      if (cn == elen && memcmp(cap, buf, elen) == 0) printf("PASS NORM_SCALE_X\n");
+      else printf("FAIL NORM_SCALE_X\n>95 printable chars\n<%d chars\n", cn); }
 
-    /* NEGEV_DRY: 10 random from 1-126 */
+    /* NORM_NEG_XY: 10 random from 1-126 */
     for (i = 0; i < N; i++) buf[i] = 1 + (rand() % 126);
     cs(); for (i = 0; i < N; i++) ft_putchar(buf[i]); ce();
-    test("NEGEV_DRY", buf, N);
+    test("NORM_NEG_XY", buf, N);
 
     unlink(CAP);
     return 0;

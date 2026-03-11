@@ -1,33 +1,20 @@
-Assignment name  : ft_split
-Expected files   : ft_split.c
+Assignment name : ft_split
+Expected files  : ft_split.c
 Allowed functions: malloc
 --------------------------------------------------------------------------------
 
-Écrire une fonction qui découpe une chaîne de caractères en mots, en utilisant
-un ensemble de caractères comme délimiteurs. La fonction retourne un tableau
-de chaînes (terminé par NULL), où chaque élément est un mot extrait.
+Ecris une fonction qui decoupe une chaine en un tableau de sous-chaines,
+en utilisant un ensemble de caracteres comme separateurs.
 
 Prototype:
   char **ft_split(char *str, char *charset);
 
-  - str     : la chaîne à découper
-  - charset : l'ensemble des caractères délimiteurs
+- Les separateurs consecutifs ne generent PAS de chaines vides.
+- Le tableau retourne doit etre termine par NULL.
+- Chaque chaine et le tableau doivent etre alloues avec malloc.
+- Utile pour parser un fichier de scene .rt !
 
-Chaque caractère de charset est un séparateur individuel.
-Les séparateurs consécutifs ne génèrent pas de chaînes vides.
-
-La fonction retourne NULL si str ou charset est NULL.
-
-Exemples:
-
-  ft_split("Hello World", " ");
-  // retourne {"Hello", "World", NULL}
-
-  ft_split("***Hello**World***42***", "*");
-  // retourne {"Hello", "World", "42", NULL}
-
-  ft_split("Hello", "");
-  // retourne {"Hello", NULL}
-
-  ft_split("abc,def;ghi", ",;");
-  // retourne {"abc", "def", "ghi", NULL}
+Exemple:
+  char **r = ft_split("hello world", " ");    // r = {"hello", "world", NULL}
+  char **r = ft_split("a,,b,,c", ",");         // r = {"a", "b", "c", NULL}
+  char **r = ft_split("  spaces  ", " ");      // r = {"spaces", NULL}

@@ -1,0 +1,21 @@
+Assignment name : vec_cross
+Expected files  : vec_cross.c
+Allowed functions: (none)
+Header fourni   : #include "vec3.h"
+--------------------------------------------------------------------------------
+
+Ecris une fonction qui calcule le produit vectoriel (cross product)
+de deux vecteurs 3D. Le cross product donne un vecteur perpendiculaire
+aux deux entrees. Utile pour calculer les normales de surfaces.
+
+Prototype:
+  t_vec3 vec_cross(t_vec3 a, t_vec3 b);
+
+Formule:
+  x = a.y*b.z - a.z*b.y
+  y = a.z*b.x - a.x*b.z
+  z = a.x*b.y - a.y*b.x
+
+Exemple:
+  vec_cross(vec3(1,0,0), vec3(0,1,0));  // = vec3(0,0,1)
+  vec_cross(vec3(0,1,0), vec3(1,0,0));  // = vec3(0,0,-1)

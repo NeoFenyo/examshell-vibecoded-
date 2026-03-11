@@ -1,0 +1,22 @@
+Assignment name : vec_create
+Expected files  : vec_create.c
+Allowed functions: (none)
+Header fourni   : #include "vec3.h" (copie dans ton dossier de rendu)
+--------------------------------------------------------------------------------
+
+Ecris la fonction constructeur pour le type t_vec3, defini dans vec3.h :
+
+  typedef struct s_vec3 {
+      double x;
+      double y;
+      double z;
+  } t_vec3;
+
+Prototype:
+  t_vec3 vec3(double x, double y, double z);
+
+Retourne une structure t_vec3 initialisee avec les valeurs x, y, z.
+
+Exemple:
+  t_vec3 v = vec3(1.0, 2.0, 3.0);  // v.x=1.0, v.y=2.0, v.z=3.0
+  t_vec3 o = vec3(0, 0, 0);         // vecteur nul

@@ -1,0 +1,27 @@
+Assignment name : normal_shade
+Expected files  : normal_shade.c
+Allowed functions: sqrt (math.h)
+Header fourni   : ray.h, color.h
+Compiler avec   : -lm
+Prerequis       : hit_sphere, vec_normalize
+--------------------------------------------------------------------------------
+
+Ecris une fonction qui colore un pixel en fonction de la normale
+de la sphere au point d'impact.
+
+Prototype:
+  t_color normal_shade(t_vec3 center, t_ray r, double t);
+
+Algorithme:
+  1. Calculer le point d'impact : P = ray_at(r, t)
+  2. Calculer la normale : N = normalize(P - center)
+  3. Convertir la normale en couleur :
+     color.r = 0.5 * (N.x + 1.0)
+     color.g = 0.5 * (N.y + 1.0)
+     color.b = 0.5 * (N.z + 1.0)
+
+Cela donne une visualisation arc-en-ciel de la géometrie de la sphere.
+
+Exemple:
+  // Un rayon qui touche le "sommet" de la sphere
+  // Normale = (0, 1, 0) → color(0.5, 1.0, 0.5)

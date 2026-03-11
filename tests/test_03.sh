@@ -1,112 +1,86 @@
 #!/bin/bash
-# Test 03: repeat_alpha — 10 tests randomises (programme)
+# Test 03: ft_atoi
 RENDU="$1"
 PROJECT="$2"
 source "$PROJECT/tests/utils.sh"
 
+MAIN="/tmp/examshell_main_$$.c"
 BIN="/tmp/examshell_bin_$$"
 
-echo -e "${CYAN}${BOLD}-- Test repeat_alpha --${RESET}"
+echo -e "${CYAN}${BOLD}-- Test ft_atoi --${RESET}"
 
-if [ ! -f "$RENDU/repeat_alpha.c" ]; then
-    echo -e "  ${RED}Fichier repeat_alpha.c introuvable${RESET}"
+if [ ! -f "$RENDU/ft_atoi.c" ]; then
+    echo -e "  ${RED}Fichier ft_atoi.c introuvable${RESET}"
     exit 1
 fi
 
-compile_files "$BIN" "$RENDU/repeat_alpha.c"
-if [ $? -ne 0 ]; then rm -f "$BIN"; print_results; exit 1; fi
+cat > "$MAIN" << 'EOF'
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
-# Reference implementation
-ref() {
-    local s="$1" result="" c n
-    for ((i=0; i<${#s}; i++)); do
-        c="${s:$i:1}"
-        if [[ "$c" =~ [a-z] ]]; then
-            n=$(( $(printf '%d' "'$c") - 96 ))
-            for ((j=0; j<n; j++)); do result+="$c"; done
-        elif [[ "$c" =~ [A-Z] ]]; then
-            n=$(( $(printf '%d' "'$c") - 64 ))
-            for ((j=0; j<n; j++)); do result+="$c"; done
-        else
-            result+="$c"
-        fi
-    done
-    echo "$result"
+int ft_atoi(const char *str);
+
+#define N 10
+
+int main(void) {
+    srand(time(NULL));
+    int i, ok, expected, got;
+    char buf[256];
+
+    /* ZERO_VARIANTS */
+    {char *zs[]={"0","+0","-0","  0"," +0"," -0","  \t0","000","+000","-000"};
+    ok=1;for(i=0;i<N;i++){got=ft_atoi(zs[i]);expected=atoi(zs[i]);if(got!=expected){ok=0;break;}}
+    if(ok)printf("PASS ZERO_VARIANTS\n");else printf("FAIL ZERO_VARIANTS\n>%d\n<%d\n",expected,got);}
+
+    /* POSITIVE_NUMBERS */
+    ok=1;for(i=0;i<N;i++){sprintf(buf,"%d",rand()%100000);expected=atoi(buf);got=ft_atoi(buf);if(got!=expected){ok=0;break;}}
+    if(ok)printf("PASS POSITIVE_NUMBERS\n");else printf("FAIL POSITIVE_NUMBERS\n>%d\n<%d\n",expected,got);
+
+    /* NEGATIVE_NUMBERS */
+    ok=1;for(i=0;i<N;i++){sprintf(buf,"-%d",1+(rand()%100000));expected=atoi(buf);got=ft_atoi(buf);if(got!=expected){ok=0;break;}}
+    if(ok)printf("PASS NEGATIVE_NUMBERS\n");else printf("FAIL NEGATIVE_NUMBERS\n>%d\n<%d\n",expected,got);
+
+    /* PLUS_PREFIX */
+    ok=1;for(i=0;i<N;i++){sprintf(buf,"+%d",rand()%100000);expected=atoi(buf);got=ft_atoi(buf);if(got!=expected){ok=0;break;}}
+    if(ok)printf("PASS PLUS_PREFIX\n");else printf("FAIL PLUS_PREFIX\n>%d\n<%d\n",expected,got);
+
+    /* LEADING_WHITESPACE */
+    ok=1;for(i=0;i<N;i++){int ws=1+(rand()%5);int j;for(j=0;j<ws;j++)buf[j]=" \t\n\v\f\r"[rand()%6];sprintf(buf+ws,"%d",(rand()%2?1:-1)*(rand()%10000));expected=atoi(buf);got=ft_atoi(buf);if(got!=expected){ok=0;break;}}
+    if(ok)printf("PASS LEADING_WHITESPACE\n");else printf("FAIL LEADING_WHITESPACE\n>%d\n<%d\n",expected,got);
+
+    /* TRAILING_JUNK */
+    ok=1;for(i=0;i<N;i++){int v=rand()%10000;sprintf(buf,"%dabc%d",v,rand());expected=atoi(buf);got=ft_atoi(buf);if(got!=expected){ok=0;break;}}
+    if(ok)printf("PASS TRAILING_JUNK\n");else printf("FAIL TRAILING_JUNK\n>%d\n<%d\n",expected,got);
+
+    /* INVALID_INPUTS */
+    {char *vs[]={"","   ","+","-","  +","  -","abc","  abc","+-1","--1"};
+    ok=1;for(i=0;i<N;i++){expected=atoi(vs[i]);got=ft_atoi(vs[i]);if(got!=expected){ok=0;break;}}
+    if(ok)printf("PASS INVALID_INPUTS\n");else printf("FAIL INVALID_INPUTS\n>%d\n<%d\n",expected,got);}
+
+    /* DOUBLE_SIGNS */
+    {char *ds[]={"--42","++42","+-42","-+42","--0","++0","+-0","-+0","---1","+++1"};
+    ok=1;for(i=0;i<N;i++){expected=atoi(ds[i]);got=ft_atoi(ds[i]);if(got!=expected){ok=0;break;}}
+    if(ok)printf("PASS DOUBLE_SIGNS\n");else printf("FAIL DOUBLE_SIGNS\n>%d\n<%d\n",expected,got);}
+
+    /* EDGE_LIMITS */
+    {char *es[]={"2147483647","-2147483648","2147483646","-2147483647","1000000000","-1000000000","999999999","-999999999","2000000000","-2000000000"};
+    ok=1;for(i=0;i<N;i++){expected=atoi(es[i]);got=ft_atoi(es[i]);if(got!=expected){ok=0;break;}}
+    if(ok)printf("PASS EDGE_LIMITS\n");else printf("FAIL EDGE_LIMITS\n>%d\n<%d\n",expected,got);}
+
+    /* RANDOM_FORMAT_STRING */
+    ok=1;for(i=0;i<N;i++){int ws=rand()%4;int j;for(j=0;j<ws;j++)buf[j]=" \t\n"[rand()%3];int sign=rand()%3;if(sign==1)buf[ws++]='+';else if(sign==2)buf[ws++]='-';sprintf(buf+ws,"%d",rand()%100000);expected=atoi(buf);got=ft_atoi(buf);if(got!=expected){ok=0;break;}}
+    if(ok)printf("PASS RANDOM_FORMAT_STRING\n");else printf("FAIL RANDOM_FORMAT_STRING\n>%d\n<%d\n",expected,got);
+
+    return 0;
 }
+EOF
 
-rword() { cat /dev/urandom | tr -dc 'a-z' | head -c $((1 + RANDOM % 6)); }
+compile_files "$BIN" "$RENDU/ft_atoi.c" "$MAIN"
+if [ $? -ne 0 ]; then rm -f "$MAIN" "$BIN"; print_results; exit 1; fi
 
-run() {
-    local name="$1"; shift
-    local ok=1 exp_save="" got_save=""
-    for arg in "$@"; do
-        local expected got
-        if [ "$arg" = "__NOARG__" ]; then
-            expected=""
-            got=$(timeout 10 "$BIN" 2>/dev/null)
-        else
-            expected=$(ref "$arg")
-            got=$(timeout 10 "$BIN" "$arg" 2>/dev/null)
-        fi
-        if [ "$got" != "$expected" ]; then
-            ok=0; exp_save="$expected"; got_save="$got"; break
-        fi
-    done
-    if [ $ok -eq 1 ]; then pass "$name"
-    else fail "$name" "$exp_save" "$got_save"; fi
-}
-
-# VETO_AGAIN: 10 random lowercase strings
-args=(); for i in $(seq 1 10); do args+=("$(rword)"); done
-run "VETO_AGAIN" "${args[@]}"
-
-# WAR_CRIME_REPEAT: 10 random uppercase strings
-args=(); for i in $(seq 1 10); do
-    w=$(cat /dev/urandom | tr -dc 'A-Z' | head -c $((1 + RANDOM % 6)))
-    args+=("$w")
-done
-run "WAR_CRIME_REPEAT" "${args[@]}"
-
-# UN_IGNORED_AGAIN: 10 digit-only strings (should print once each)
-args=(); for i in $(seq 1 10); do
-    w=$(cat /dev/urandom | tr -dc '0-9' | head -c $((1 + RANDOM % 8)))
-    args+=("$w")
-done
-run "UN_IGNORED_AGAIN" "${args[@]}"
-
-# VIOLATION_LOOP: 10 mixed alpha+digit strings
-args=(); for i in $(seq 1 10); do
-    w=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c $((3 + RANDOM % 6)))
-    args+=("$w")
-done
-run "VIOLATION_LOOP" "${args[@]}"
-
-# EXCUSE_RECYCLED: strings with z/Z (26 repetitions)
-args=("z" "Z" "zz" "ZZ" "az" "Az" "zA" "zZ" "zzz" "ZZZ")
-run "EXCUSE_RECYCLED" "${args[@]}"
-
-# BOMBING_REPEAT: empty string and no arg
-args=("" "" "" "" "" "__NOARG__" "__NOARG__" "__NOARG__" "__NOARG__" "__NOARG__")
-run "BOMBING_REPEAT" "${args[@]}"
-
-# DENIAL_AGAIN: strings with spaces
-args=("a b" "a b c" " a" "a " "a  b" "a b" " " "  " "a b c d" "x y")
-run "DENIAL_AGAIN" "${args[@]}"
-
-# HASBARA_REPLAY: only non-alpha characters
-args=("123" "!@#" "..." "   " "12 34" "!a" "1" "." " !" "##")
-run "HASBARA_REPLAY" "${args[@]}"
-
-# BLOCKADE_ONGOING: full alphabet tests
-args=("abc" "xyz" "ABC" "XYZ" "abcxyz" "ABCXYZ" "aAbBcC" "zZaA" "mno" "MNO")
-run "BLOCKADE_ONGOING" "${args[@]}"
-
-# PROPAGANDA_LOOP: 10 fully random strings
-args=(); for i in $(seq 1 10); do
-    w=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9 !.' | head -c $((2 + RANDOM % 8)))
-    args+=("$w")
-done
-run "PROPAGANDA_LOOP" "${args[@]}"
-
-rm -f "$BIN"
+OUTPUT=$(timeout 10 "$BIN" 2>/dev/null)
+parse_results "$OUTPUT"
+rm -f "$MAIN" "$BIN"
 print_results

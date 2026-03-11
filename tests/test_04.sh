@@ -1,5 +1,5 @@
 #!/bin/bash
-# Test 04: ft_swap — 10 tests randomises, 10 iterations chacun
+# Test 04: ft_atof
 RENDU="$1"
 PROJECT="$2"
 source "$PROJECT/tests/utils.sh"
@@ -7,142 +7,85 @@ source "$PROJECT/tests/utils.sh"
 MAIN="/tmp/examshell_main_$$.c"
 BIN="/tmp/examshell_bin_$$"
 
-echo -e "${CYAN}${BOLD}-- Test ft_swap --${RESET}"
+echo -e "${CYAN}${BOLD}-- Test ft_atof --${RESET}"
 
-if [ ! -f "$RENDU/ft_swap.c" ]; then
-    echo -e "  ${RED}Fichier ft_swap.c introuvable${RESET}"
+if [ ! -f "$RENDU/ft_atof.c" ]; then
+    echo -e "  ${RED}Fichier ft_atof.c introuvable${RESET}"
     exit 1
 fi
 
 cat > "$MAIN" << 'EOF'
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <time.h>
 
-void ft_swap(int *a, int *b);
+double ft_atof(const char *str);
 
-#define N 10
-
-static void t(char *name, int a_in, int b_in) {
-    int a = a_in, b = b_in;
-    ft_swap(&a, &b);
-    if (a == b_in && b == a_in) printf("PASS %s\n", name);
-    else printf("FAIL %s\n>%d %d\n<%d %d\n", name, b_in, a_in, a, b);
-}
+#define EPS 1e-6
+static int feq(double a, double b) { return fabs(a - b) < EPS; }
 
 int main(void) {
     srand(time(NULL));
-    int i, a, b, ok;
-    int sa, sb, ga, gb;
+    int i, ok;
+    double got, exp;
 
-    /* LAND_THEFT: 10 random positive pairs */
-    ok = 1;
-    for (i = 0; i < N; i++) {
-        a = rand() % 1000; b = rand() % 1000;
-        sa = a; sb = b;
-        ft_swap(&a, &b);
-        if (a != sb || b != sa) { ok = 0; ga = a; gb = b; break; }
-    }
-    if (ok) printf("PASS LAND_THEFT\n");
-    else printf("FAIL LAND_THEFT\n>%d %d\n<%d %d\n", sb, sa, ga, gb);
+    /* NORMAL_STRING */
+    {char *ts[]={"3.14","0.5","1.0","100.0","0.001","99.99","42.42","0.0","1.23456","9.9"};
+    ok=1;for(i=0;i<10;i++){exp=atof(ts[i]);got=ft_atof(ts[i]);if(!feq(got,exp)){ok=0;break;}}
+    if(ok)printf("PASS NORMAL_STRING\n");else printf("FAIL NORMAL_STRING\n>%f\n<%f\n",exp,got);}
 
-    /* PRISONER_TRADE: one value is 0 */
-    ok = 1;
-    for (i = 0; i < N; i++) {
-        a = 0; b = 1 + (rand() % 999);
-        sa = a; sb = b;
-        ft_swap(&a, &b);
-        if (a != sb || b != sa) { ok = 0; ga = a; gb = b; break; }
-    }
-    if (ok) printf("PASS PRISONER_TRADE\n");
-    else printf("FAIL PRISONER_TRADE\n>%d %d\n<%d %d\n", sb, sa, ga, gb);
+    /* LEADING_SPACES */
+    {char *ts[]={"-3.14","-0.5","-1.0","-100.0","-0.001","-99.99","-42.42","-0.0","-1.23","-9.9"};
+    ok=1;for(i=0;i<10;i++){exp=atof(ts[i]);got=ft_atof(ts[i]);if(!feq(got,exp)){ok=0;break;}}
+    if(ok)printf("PASS LEADING_SPACES\n");else printf("FAIL LEADING_SPACES\n>%f\n<%f\n",exp,got);}
 
-    /* BORDER_SHUFFLE: identical values */
-    ok = 1;
-    for (i = 0; i < N; i++) {
-        a = rand() % 1000; b = a;
-        sa = a; sb = b;
-        ft_swap(&a, &b);
-        if (a != sb || b != sa) { ok = 0; ga = a; gb = b; break; }
-    }
-    if (ok) printf("PASS BORDER_SHUFFLE\n");
-    else printf("FAIL BORDER_SHUFFLE\n>%d %d\n<%d %d\n", sb, sa, ga, gb);
+    /* MULTIPLE_WORDS */
+    {char *ts[]={"42","0","100","-42","+100","-0","999","+1","-1","12345"};
+    ok=1;for(i=0;i<10;i++){exp=atof(ts[i]);got=ft_atof(ts[i]);if(!feq(got,exp)){ok=0;break;}}
+    if(ok)printf("PASS MULTIPLE_WORDS\n");else printf("FAIL MULTIPLE_WORDS\n>%f\n<%f\n",exp,got);}
 
-    /* TERRITORY_GRAB: 10 random negative pairs */
-    ok = 1;
-    for (i = 0; i < N; i++) {
-        a = -(rand() % 1000); b = -(rand() % 1000);
-        sa = a; sb = b;
-        ft_swap(&a, &b);
-        if (a != sb || b != sa) { ok = 0; ga = a; gb = b; break; }
-    }
-    if (ok) printf("PASS TERRITORY_GRAB\n");
-    else printf("FAIL TERRITORY_GRAB\n>%d %d\n<%d %d\n", sb, sa, ga, gb);
+    /* TRAILING_SPACES */
+    {char *ts[]={".5",".25",".1",".01",".001","-.5","-.25","+.5","+.1","+.01"};
+    ok=1;for(i=0;i<10;i++){exp=atof(ts[i]);got=ft_atof(ts[i]);if(!feq(got,exp)){ok=0;break;}}
+    if(ok)printf("PASS TRAILING_SPACES\n");else printf("FAIL TRAILING_SPACES\n>%f\n<%f\n",exp,got);}
 
-    /* PEACE_REJECTED: INT_MAX/INT_MIN boundaries */
-    t("PEACE_REJECTED", 2147483647, -2147483648);
+    /* MIXED_TABS_SPACES */
+    {char *ts[]={"  3.14"," +42.0","\t-1.5","  0.0","  100"," \t+.5","\t\t-99","  .25","   42","  +0"};
+    ok=1;for(i=0;i<10;i++){exp=atof(ts[i]);got=ft_atof(ts[i]);if(!feq(got,exp)){ok=0;break;}}
+    if(ok)printf("PASS MIXED_TABS_SPACES\n");else printf("FAIL MIXED_TABS_SPACES\n>%f\n<%f\n",exp,got);}
 
-    /* MAP_REDRAWN: positive vs negative */
-    ok = 1;
-    for (i = 0; i < N; i++) {
-        int v = 1 + (rand() % 10000);
-        a = v; b = -v;
-        sa = a; sb = b;
-        ft_swap(&a, &b);
-        if (a != sb || b != sa) { ok = 0; ga = a; gb = b; break; }
-    }
-    if (ok) printf("PASS MAP_REDRAWN\n");
-    else printf("FAIL MAP_REDRAWN\n>%d %d\n<%d %d\n", sb, sa, ga, gb);
+    /* ONLY_TABS */
+    {char *ts[]={"1.2abc","42xyz","3.14 5","-1.0!","0.5,2","100$","99.a",".5b","1.","2."};
+    ok=1;for(i=0;i<10;i++){exp=atof(ts[i]);got=ft_atof(ts[i]);if(!feq(got,exp)){ok=0;break;}}
+    if(ok)printf("PASS ONLY_TABS\n");else printf("FAIL ONLY_TABS\n>%f\n<%f\n",exp,got);}
 
-    /* DEAL_BROKEN: large random values */
-    ok = 1;
-    for (i = 0; i < N; i++) {
-        a = rand(); b = rand();
-        sa = a; sb = b;
-        ft_swap(&a, &b);
-        if (a != sb || b != sa) { ok = 0; ga = a; gb = b; break; }
-    }
-    if (ok) printf("PASS DEAL_BROKEN\n");
-    else printf("FAIL DEAL_BROKEN\n>%d %d\n<%d %d\n", sb, sa, ga, gb);
+    /* LONE_WORD */
+    ok=1;got=ft_atof("");if(!feq(got,0.0)){ok=0;}
+    if(ok){got=ft_atof("abc");if(!feq(got,0.0))ok=0;}
+    if(ok){got=ft_atof("   ");if(!feq(got,0.0))ok=0;}
+    if(ok)printf("PASS LONE_WORD\n");else printf("FAIL LONE_WORD\n>0.0\n<%f\n",got);
 
-    /* COLONY_PLANTED: small values -10 to 10 */
-    ok = 1;
-    for (i = 0; i < N; i++) {
-        a = (rand() % 21) - 10; b = (rand() % 21) - 10;
-        sa = a; sb = b;
-        ft_swap(&a, &b);
-        if (a != sb || b != sa) { ok = 0; ga = a; gb = b; break; }
-    }
-    if (ok) printf("PASS COLONY_PLANTED\n");
-    else printf("FAIL COLONY_PLANTED\n>%d %d\n<%d %d\n", sb, sa, ga, gb);
+    /* PUNCTUATION_WORD */
+    {char *ts[]={"+3.14","+0.5","+1.0","+100.0","+0.001","+99.99","+42.42","+0.0","+1.23","+9.9"};
+    ok=1;for(i=0;i<10;i++){exp=atof(ts[i]);got=ft_atof(ts[i]);if(!feq(got,exp)){ok=0;break;}}
+    if(ok)printf("PASS PUNCTUATION_WORD\n");else printf("FAIL PUNCTUATION_WORD\n>%f\n<%f\n",exp,got);}
 
-    /* RIGHTS_REVOKED: always 1 and 0 */
-    ok = 1;
-    for (i = 0; i < N; i++) {
-        a = (i % 2) ? 1 : 0; b = (i % 2) ? 0 : 1;
-        sa = a; sb = b;
-        ft_swap(&a, &b);
-        if (a != sb || b != sa) { ok = 0; ga = a; gb = b; break; }
-    }
-    if (ok) printf("PASS RIGHTS_REVOKED\n");
-    else printf("FAIL RIGHTS_REVOKED\n>%d %d\n<%d %d\n", sb, sa, ga, gb);
+    /* NO_ARGS */
+    {char *ts[]={"0.123456","1.000001","99.999999","0.000001","-0.000001","3.141592","2.718281","1.414213","0.577215","1.618033"};
+    ok=1;for(i=0;i<10;i++){exp=atof(ts[i]);got=ft_atof(ts[i]);if(!feq(got,exp)){ok=0;break;}}
+    if(ok)printf("PASS NO_ARGS\n");else printf("FAIL NO_ARGS\n>%f\n<%f\n",exp,got);}
 
-    /* WATER_STOLEN: 10 fully random int pairs */
-    ok = 1;
-    for (i = 0; i < N; i++) {
-        a = rand() - rand(); b = rand() - rand();
-        sa = a; sb = b;
-        ft_swap(&a, &b);
-        if (a != sb || b != sa) { ok = 0; ga = a; gb = b; break; }
-    }
-    if (ok) printf("PASS WATER_STOLEN\n");
-    else printf("FAIL WATER_STOLEN\n>%d %d\n<%d %d\n", sb, sa, ga, gb);
+    /* WEIRD_CHARS */
+    ok=1;
+    {char buf[64];for(i=0;i<10;i++){int n=rand()%1000;int d=rand()%10000;sprintf(buf,"%d.%04d",n,d);exp=atof(buf);got=ft_atof(buf);if(!feq(got,exp)){ok=0;break;}}}
+    if(ok)printf("PASS WEIRD_CHARS\n");else printf("FAIL WEIRD_CHARS\n>%f\n<%f\n",exp,got);
 
     return 0;
 }
 EOF
 
-compile_files "$BIN" "$RENDU/ft_swap.c" "$MAIN"
+compile_files "$BIN" "$RENDU/ft_atof.c" "$MAIN" -lm
 if [ $? -ne 0 ]; then rm -f "$MAIN" "$BIN"; print_results; exit 1; fi
 
 OUTPUT=$(timeout 10 "$BIN" 2>/dev/null)

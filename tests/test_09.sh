@@ -1,97 +1,95 @@
 #!/bin/bash
-# Test 09: fprime — 10 tests randomises (programme)
+# Test 09: vec_create
 RENDU="$1"
 PROJECT="$2"
 source "$PROJECT/tests/utils.sh"
 
+MAIN="/tmp/examshell_main_$$.c"
 BIN="/tmp/examshell_bin_$$"
 
-echo -e "${CYAN}${BOLD}-- Test fprime --${RESET}"
+echo -e "${CYAN}${BOLD}-- Test vec_create --${RESET}"
 
-if [ ! -f "$RENDU/fprime.c" ]; then
-    echo -e "  ${RED}Fichier fprime.c introuvable${RESET}"
+if [ ! -f "$RENDU/vec_create.c" ]; then
+    echo -e "  ${RED}Fichier vec_create.c introuvable${RESET}"
     exit 1
 fi
 
-compile_files "$BIN" "$RENDU/fprime.c"
-if [ $? -ne 0 ]; then rm -f "$BIN"; print_results; exit 1; fi
+# Copy header to rendu
+cp "$PROJECT/subjects/includes/vec3.h" "$RENDU/" 2>/dev/null
 
-# Reference implementation en bash
-ref_fprime() {
-    local n=$1
-    if [ "$n" -eq 1 ]; then echo "1"; return; fi
-    local d=2 first=1 result=""
-    while [ $((d * d)) -le $n ]; do
-        while [ $((n % d)) -eq 0 ]; do
-            if [ $first -eq 1 ]; then result="$d"; first=0
-            else result="$result * $d"; fi
-            n=$((n / d))
-        done
-        d=$((d + 1))
-    done
-    if [ $n -gt 1 ]; then
-        if [ $first -eq 1 ]; then result="$n"
-        else result="$result * $n"; fi
-    fi
-    echo "$result"
+cat > "$MAIN" << 'EOF'
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <time.h>
+#include "vec3.h"
+
+#define EPS 1e-9
+#define N 10
+static int feq(double a,double b){return fabs(a-b)<EPS;}
+
+int main(void) {
+    srand(time(NULL));
+    int i, ok;
+    t_vec3 v;
+
+    /* BASIC_RANGE */
+    v=vec3(0,0,0);
+    if(feq(v.x,0)&&feq(v.y,0)&&feq(v.z,0))printf("PASS BASIC_RANGE\n");
+    else printf("FAIL BASIC_RANGE\n>0 0 0\n<%f %f %f\n",v.x,v.y,v.z);
+
+    /* NEGATIVE_RANGE */
+    v=vec3(1,2,3);
+    if(feq(v.x,1)&&feq(v.y,2)&&feq(v.z,3))printf("PASS NEGATIVE_RANGE\n");
+    else printf("FAIL NEGATIVE_RANGE\n>1 2 3\n<%f %f %f\n",v.x,v.y,v.z);
+
+    /* ZERO_CROSS_RANGE */
+    ok=1;for(i=0;i<N;i++){double x=(rand()%2000-1000)/10.0,y=(rand()%2000-1000)/10.0,z=(rand()%2000-1000)/10.0;
+    v=vec3(x,y,z);if(!feq(v.x,x)||!feq(v.y,y)||!feq(v.z,z)){ok=0;break;}}
+    if(ok)printf("PASS ZERO_CROSS_RANGE\n");else printf("FAIL ZERO_CROSS_RANGE\n>random values\n<mismatch\n");
+
+    /* INVALID_MIN_MAX */
+    v=vec3(-1,-2,-3);
+    if(feq(v.x,-1)&&feq(v.y,-2)&&feq(v.z,-3))printf("PASS INVALID_MIN_MAX\n");
+    else printf("FAIL INVALID_MIN_MAX\n>-1 -2 -3\n<%f %f %f\n",v.x,v.y,v.z);
+
+    /* EMPTY_RANGE */
+    v=vec3(3.14,2.71,1.41);
+    if(feq(v.x,3.14)&&feq(v.y,2.71)&&feq(v.z,1.41))printf("PASS EMPTY_RANGE\n");
+    else printf("FAIL EMPTY_RANGE\n>3.14 2.71 1.41\n<%f %f %f\n",v.x,v.y,v.z);
+
+    /* SINGLE_ELEM_RANGE */
+    v=vec3(1e10,-1e10,1e-10);
+    if(feq(v.x,1e10)&&feq(v.y,-1e10)&&feq(v.z,1e-10))printf("PASS SINGLE_ELEM_RANGE\n");
+    else printf("FAIL SINGLE_ELEM_RANGE\n>extreme values\n<%f %f %f\n",v.x,v.y,v.z);
+
+    /* LARGE_RANGE */
+    ok=1;for(i=0;i<N;i++){v=vec3(i,i*2,i*3);if(!feq(v.x,i)||!feq(v.y,i*2)||!feq(v.z,i*3)){ok=0;break;}}
+    if(ok)printf("PASS LARGE_RANGE\n");else printf("FAIL LARGE_RANGE\n>sequential\n<mismatch\n");
+
+    /* SAME_BOUNDS */
+    v=vec3(0.5,0.5,0.5);
+    if(feq(v.x,0.5)&&feq(v.y,0.5)&&feq(v.z,0.5))printf("PASS SAME_BOUNDS\n");
+    else printf("FAIL SAME_BOUNDS\n>0.5 0.5 0.5\n<%f %f %f\n",v.x,v.y,v.z);
+
+    /* RANDOM_BOUNDS */
+    v=vec3(-0.001,0.001,-0.001);
+    if(feq(v.x,-0.001)&&feq(v.y,0.001)&&feq(v.z,-0.001))printf("PASS RANDOM_BOUNDS\n");
+    else printf("FAIL RANDOM_BOUNDS\n>small values\n<%f %f %f\n",v.x,v.y,v.z);
+
+    /* MIXED_BOUNDS */
+    ok=1;for(i=0;i<N;i++){double x=rand()/(double)RAND_MAX,y=rand()/(double)RAND_MAX,z=rand()/(double)RAND_MAX;
+    v=vec3(x,y,z);if(!feq(v.x,x)||!feq(v.y,y)||!feq(v.z,z)){ok=0;break;}}
+    if(ok)printf("PASS MIXED_BOUNDS\n");else printf("FAIL MIXED_BOUNDS\n>random doubles\n<mismatch\n");
+
+    return 0;
 }
+EOF
 
-run() {
-    local name="$1"; shift
-    local ok=1 exp_save="" got_save=""
-    for arg in "$@"; do
-        local expected got
-        if [ "$arg" = "__NOARG__" ]; then
-            expected=""
-            got=$(timeout 10 "$BIN" 2>/dev/null)
-        else
-            expected=$(ref_fprime "$arg")
-            got=$(timeout 10 "$BIN" "$arg" 2>/dev/null)
-        fi
-        if [ "$got" != "$expected" ]; then
-            ok=0; exp_save="$expected"; got_save="$got"; break
-        fi
-    done
-    if [ $ok -eq 1 ]; then pass "$name"
-    else fail "$name" "$exp_save" "$got_save"; fi
-}
+compile_files "$BIN" "$RENDU/vec_create.c" "$MAIN" -I"$RENDU" -lm
+if [ $? -ne 0 ]; then rm -f "$MAIN" "$BIN"; print_results; exit 1; fi
 
-# BIBI_INDICTED: n=1, 10 times
-args=(); for i in $(seq 1 10); do args+=("1"); done
-run "BIBI_INDICTED" "${args[@]}"
-
-# LIKUD_CRUMBLES: 10 known prime numbers
-run "LIKUD_CRUMBLES" 2 3 5 7 11 13 17 19 23 29
-
-# COALITION_SPLIT: powers of 2
-run "COALITION_SPLIT" 2 4 8 16 32 64 128 256 512 1024
-
-# KNESSET_CIRCUS: classic composite numbers
-run "KNESSET_CIRCUS" 42 100 360 720 1000 1234 5678 9999 12345 99999
-
-# CORRUPTION_PRIME: mix of primes and composites
-run "CORRUPTION_PRIME" 6 10 14 15 21 35 77 91 143 221
-
-# BRIBERY_FACTOR: larger composites
-run "BRIBERY_FACTOR" 225225 100000 999999 123456 654321 111111 222222 333333 444444 555555
-
-# FRAUD_EXPOSED: perfect squares
-run "FRAUD_EXPOSED" 4 9 25 49 121 169 289 361 529 841
-
-# SCANDAL_UNFOLDS: no argument, 10 times
-args=(); for i in $(seq 1 10); do args+=("__NOARG__"); done
-run "SCANDAL_UNFOLDS" "${args[@]}"
-
-# ELECTION_FARCE: larger prime numbers
-run "ELECTION_FARCE" 97 101 103 107 109 113 127 131 137 139
-
-# REGIME_COLLAPSE: 10 random numbers between 2 and 100000
-args=()
-for i in $(seq 1 10); do
-    n=$((2 + RANDOM % 99999))
-    args+=("$n")
-done
-run "REGIME_COLLAPSE" "${args[@]}"
-
-rm -f "$BIN"
+OUTPUT=$(timeout 10 "$BIN" 2>/dev/null)
+parse_results "$OUTPUT"
+rm -f "$MAIN" "$BIN"
 print_results

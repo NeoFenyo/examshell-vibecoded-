@@ -1,0 +1,26 @@
+Assignment name : ppm_gradient
+Expected files  : ppm_gradient.c
+Allowed functions: write, malloc, free
+Header fourni   : #include "color.h"
+--------------------------------------------------------------------------------
+
+Ecris un PROGRAMME qui genere une image PPM degradee sur stdout.
+
+Le programme recoit en arguments la largeur et la hauteur :
+  ./ppm_gradient 400 300 > image.ppm
+
+Pour chaque pixel (x, y) :
+  r = x / (largeur - 1)
+  g = y / (hauteur - 1)
+  b = 0.25
+
+Chaque composante est entre 0.0 et 1.0, convertie en int 0-255.
+Le format de sortie est PPM P3 :
+  P3
+  400 300
+  255
+  r g b
+  r g b
+  ...
+
+Si argc != 3, ne rien afficher.

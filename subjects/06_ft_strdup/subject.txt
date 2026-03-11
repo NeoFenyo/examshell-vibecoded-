@@ -1,0 +1,16 @@
+Assignment name : ft_strdup
+Expected files  : ft_strdup.c
+Allowed functions: malloc
+--------------------------------------------------------------------------------
+
+Ecris une fonction qui alloue et retourne une copie de la chaine passee
+en parametre. (Comme strdup de la libc.)
+
+Prototype:
+  char *ft_strdup(char *src);
+
+- Retourne NULL si malloc echoue.
+
+Exemple:
+  char *s = ft_strdup("Hello");  // s pointe vers "Hello" (nouvelle allocation)
+  char *e = ft_strdup("");       // e pointe vers "" (nouvelle allocation)

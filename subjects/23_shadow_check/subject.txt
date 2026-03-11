@@ -1,0 +1,29 @@
+Assignment name : shadow_check
+Expected files  : shadow_check.c
+Allowed functions: sqrt (math.h)
+Header fourni   : ray.h
+Compiler avec   : -lm
+Prerequis       : hit_sphere, ray_create, vec_sub, vec_normalize
+--------------------------------------------------------------------------------
+
+Ecris une fonction qui verifie si un point est dans l'ombre.
+
+Prototype:
+  int shadow_check(t_vec3 hit_point, t_vec3 light_pos,
+                   t_vec3 sphere_center, double sphere_radius);
+
+Algorithme:
+  1. Calculer la direction vers la lumiere : light_dir = light_pos - hit_point
+  2. Distance a la lumiere : dist = vec_length(light_dir)
+  3. Normaliser light_dir
+  4. Creer un "shadow ray" : ray_create(hit_point, light_dir)
+     ATTENTION : decaler l'origine legerement (hit_point + normal * 0.001)
+     pour eviter l'auto-intersection
+  5. Tester hit_sphere avec ce rayon
+  6. Si t > 0 ET t < dist : le point est dans l'ombre → retourner 1
+  7. Sinon retourner 0
+
+Exemple:
+  // Sphere a (0,0,-5), rayon 1
+  // Point d'impact face a la lumiere : shadow = 0
+  // Point d'impact derriere la sphere : shadow = 1

@@ -1,0 +1,27 @@
+Assignment name : diffuse_light
+Expected files  : diffuse_light.c
+Allowed functions: sqrt (math.h)
+Header fourni   : ray.h, color.h
+Compiler avec   : -lm
+Prerequis       : hit_sphere, vec_normalize, vec_dot, color_ops
+--------------------------------------------------------------------------------
+
+Ecris une fonction qui calcule l'eclairage diffus (Lambertien).
+
+Prototype:
+  t_color diffuse_light(t_vec3 normal, t_vec3 light_dir, t_color obj_color);
+
+Algorithme:
+  1. Normaliser light_dir
+  2. intensity = max(0, dot(normal, light_dir))
+  3. Retourner color_scale(obj_color, intensity)
+
+L'eclairage diffus est proportionnel au cosinus de l'angle entre
+la normale et la direction de la lumiere. C'est le modele de
+shading le plus basique mais le plus important.
+
+Exemple:
+  // Normale = (0, 1, 0), lumiere = (0, 1, 0), couleur = rouge
+  // → intensity = 1.0 → rouge pur
+  // Normale = (0, 1, 0), lumiere = (1, 0, 0) (perpendiculaire)
+  // → intensity = 0.0 → noir

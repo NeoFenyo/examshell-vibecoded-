@@ -1,0 +1,14 @@
+Assignment name : ft_putstr
+Expected files  : ft_putstr.c
+Allowed functions: write
+--------------------------------------------------------------------------------
+
+Ecris une fonction qui affiche une chaine de caracteres sur la sortie standard.
+
+Prototype:
+  void ft_putstr(char *str);
+
+Exemple:
+  ft_putstr("Hello World"); // affiche "Hello World"
+  ft_putstr("");             // n'affiche rien
+  ft_putstr("42\n");         // affiche "42\n" (avec retour a la ligne)

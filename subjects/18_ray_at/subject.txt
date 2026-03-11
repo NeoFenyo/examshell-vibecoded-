@@ -1,0 +1,22 @@
+Assignment name : ray_at
+Expected files  : ray_at.c
+Allowed functions: (none)
+Header fourni   : #include "ray.h"
+Prerequis       : vec_ops, ray_create
+--------------------------------------------------------------------------------
+
+Ecris une fonction qui calcule le point sur un rayon a la distance t.
+
+Prototype:
+  t_vec3 ray_at(t_ray r, double t);
+
+Formule: P(t) = origin + t * direction
+
+Quand on detecte une intersection avec un objet, on obtient la
+valeur de t. ray_at nous donne alors le point exact de l'impact.
+
+Exemple:
+  t_ray r = ray_create(vec3(0,0,0), vec3(1,0,0));
+  ray_at(r, 5.0);    // = vec3(5, 0, 0)
+  ray_at(r, 0.0);    // = vec3(0, 0, 0) (l'origine)
+  ray_at(r, -1.0);   // = vec3(-1, 0, 0) (derriere)

@@ -1,0 +1,29 @@
+Assignment name : color_ops
+Expected files  : color_ops.c
+Allowed functions: (none)
+Header fourni   : #include "color.h"
+--------------------------------------------------------------------------------
+
+Ecris les fonctions de manipulation de couleurs RGB pour le rendu.
+Les couleurs utilisent des doubles entre 0.0 et 1.0.
+
+  typedef struct s_color {
+      double r, g, b;
+  } t_color;
+
+Prototypes:
+  t_color color(double r, double g, double b);
+  t_color color_add(t_color a, t_color b);
+  t_color color_scale(t_color c, double t);
+  t_color color_clamp(t_color c);
+  int     color_to_int(t_color c);
+
+- color       : constructeur
+- color_add   : addition composante par composante
+- color_scale : multiplication par scalaire
+- color_clamp : borner chaque composante entre 0.0 et 1.0
+- color_to_int: convertir en entier 0xRRGGBB (R*255, G*255, B*255)
+
+Exemple:
+  color_clamp(color(1.5, -0.2, 0.5)); // = color(1.0, 0.0, 0.5)
+  color_to_int(color(1.0, 0.5, 0.0)); // = 0xFF7F00

@@ -1,0 +1,21 @@
+Assignment name : ft_atoi
+Expected files  : ft_atoi.c
+Allowed functions: (none)
+--------------------------------------------------------------------------------
+
+Ecris une fonction qui convertit une chaine de caracteres en entier,
+comme la fonction atoi de la libc.
+
+Prototype:
+  int ft_atoi(const char *str);
+
+- La chaine peut commencer par des espaces/tabs.
+- Un seul signe '+' ou '-' est accepte avant les chiffres.
+- La conversion s'arrete au premier caractere non-chiffre.
+
+Exemple:
+  ft_atoi("42");       // retourne 42
+  ft_atoi("   -42");   // retourne -42
+  ft_atoi("+100abc");  // retourne 100
+  ft_atoi("--42");     // retourne 0
+  ft_atoi("");          // retourne 0

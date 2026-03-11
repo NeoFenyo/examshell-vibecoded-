@@ -1,0 +1,24 @@
+Assignment name : ppm_header
+Expected files  : ppm_header.c
+Allowed functions: write
+--------------------------------------------------------------------------------
+
+Ecris une fonction qui ecrit le header d'un fichier image PPM P3
+sur le file descriptor donne.
+
+Le format PPM P3 est le plus simple pour generer des images :
+  Ligne 1: "P3\n"
+  Ligne 2: "largeur hauteur\n"
+  Ligne 3: "255\n"
+
+Prototype:
+  void ppm_header(int fd, int width, int height);
+
+Exemple:
+  ppm_header(1, 400, 300);
+  // ecrit sur stdout :
+  // P3
+  // 400 300
+  // 255
+
+Tu devras ecrire les nombres chiffre par chiffre avec write().

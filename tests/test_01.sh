@@ -1,5 +1,5 @@
 #!/bin/bash
-# Test 01: ft_strlen — 10 tests randomises, 10 iterations chacun
+# Test 01: ft_putstr — capture stdout et compare
 RENDU="$1"
 PROJECT="$2"
 source "$PROJECT/tests/utils.sh"
@@ -7,153 +7,94 @@ source "$PROJECT/tests/utils.sh"
 MAIN="/tmp/examshell_main_$$.c"
 BIN="/tmp/examshell_bin_$$"
 
-echo -e "${CYAN}${BOLD}-- Test ft_strlen --${RESET}"
+echo -e "${CYAN}${BOLD}-- Test ft_putstr --${RESET}"
 
-if [ ! -f "$RENDU/ft_strlen.c" ]; then
-    echo -e "  ${RED}Fichier ft_strlen.c introuvable${RESET}"
+if [ ! -f "$RENDU/ft_putstr.c" ]; then
+    echo -e "  ${RED}Fichier ft_putstr.c introuvable${RESET}"
     exit 1
 fi
 
 cat > "$MAIN" << 'EOF'
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fcntl.h>
 #include <time.h>
 
-int ft_strlen(char *str);
+void ft_putstr(char *str);
 
+#define CAP "/tmp/examshell_cap"
 #define N 10
-
+static int sv; static char cap[8192]; static int cn;
+static void cs(void){fflush(stdout);sv=dup(1);int fd=open(CAP,O_WRONLY|O_CREAT|O_TRUNC,0644);dup2(fd,1);close(fd);}
+static void ce(void){fflush(stdout);dup2(sv,1);close(sv);int fd=open(CAP,O_RDONLY);cn=read(fd,cap,8191);if(cn<0)cn=0;cap[cn]=0;close(fd);}
 
 int main(void) {
     srand(time(NULL));
-    int i, j, ok, len, got;
+    int i, j, ok, len;
     char buf[1024];
 
-    /* WALL_TOO_SHORT: 10x string vide */
-    ok = 1; got = 0;
-    for (i = 0; i < N; i++) { got = ft_strlen(""); if (got != 0) { ok = 0; break; } }
-    if (ok) printf("PASS WALL_TOO_SHORT\n");
-    else printf("FAIL WALL_TOO_SHORT\n>0\n<%d\n", got);
+    /* BASIC_LOWERCASE */
+    ok=1;
+    for(i=0;i<N;i++){len=3+(rand()%20);for(j=0;j<len;j++)buf[j]='a'+(rand()%26);buf[len]=0;
+    cs();ft_putstr(buf);ce();if(cn!=len||memcmp(cap,buf,len)!=0){ok=0;break;}}
+    if(ok)printf("PASS BASIC_LOWERCASE\n");else printf("FAIL BASIC_LOWERCASE\n>%s\n<%.*s\n",buf,cn,cap);
 
-    /* BORDER_SHRUNK: 10 random single-char strings */
-    ok = 1;
-    for (i = 0; i < N; i++) {
-        buf[0] = 33 + (rand() % 94); buf[1] = 0;
-        got = ft_strlen(buf);
-        if (got != 1) { ok = 0; break; }
-    }
-    if (ok) printf("PASS BORDER_SHRUNK\n");
-    else printf("FAIL BORDER_SHRUNK\n>1\n<%d\n", got);
+    /* BASIC_DIGITS */
+    cs();ft_putstr("");ce();
+    if(cn==0)printf("PASS BASIC_DIGITS\n");else printf("FAIL BASIC_DIGITS\n>(empty)\n<%.*s\n",cn,cap);
 
-    /* SETTLEMENT_SMALL: 10 random strings 2-10 chars */
-    ok = 1;
-    for (i = 0; i < N; i++) {
-        len = 2 + (rand() % 9);
-        for (j = 0; j < len; j++) buf[j] = 'a' + (rand() % 26);
-        buf[len] = 0;
-        got = ft_strlen(buf);
-        if (got != len) { ok = 0; break; }
-    }
-    if (ok) printf("PASS SETTLEMENT_SMALL\n");
-    else printf("FAIL SETTLEMENT_SMALL\n>%d\n<%d\n", len, got);
+    /* SPECIAL_CHARS */
+    ok=1;
+    for(i=0;i<N;i++){cs();ft_putstr("Hello World");ce();if(cn!=11||memcmp(cap,"Hello World",11)!=0){ok=0;break;}}
+    if(ok)printf("PASS SPECIAL_CHARS\n");else printf("FAIL SPECIAL_CHARS\n>Hello World\n<%.*s\n",cn,cap);
 
-    /* TERRITORY_EMPTY: strings of only spaces */
-    ok = 1;
-    for (i = 0; i < N; i++) {
-        len = 1 + (rand() % 20);
-        for (j = 0; j < len; j++) buf[j] = ' ';
-        buf[len] = 0;
-        got = ft_strlen(buf);
-        if (got != len) { ok = 0; break; }
-    }
-    if (ok) printf("PASS TERRITORY_EMPTY\n");
-    else printf("FAIL TERRITORY_EMPTY\n>%d\n<%d\n", len, got);
+    /* WHITESPACE */
+    ok=1;
+    for(i=0;i<N;i++){len=50+(rand()%200);for(j=0;j<len;j++)buf[j]=33+(rand()%94);buf[len]=0;
+    cs();ft_putstr(buf);ce();if(cn!=len||memcmp(cap,buf,len)!=0){ok=0;break;}}
+    if(ok)printf("PASS WHITESPACE\n");else printf("FAIL WHITESPACE\n>len=%d\n<len=%d\n",len,cn);
 
-    /* LEGITIMACY_ZERO: 10 random strings 50-200 chars */
-    ok = 1;
-    for (i = 0; i < N; i++) {
-        len = 50 + (rand() % 151);
-        for (j = 0; j < len; j++) buf[j] = 33 + (rand() % 94);
-        buf[len] = 0;
-        got = ft_strlen(buf);
-        if (got != len) { ok = 0; break; }
-    }
-    if (ok) printf("PASS LEGITIMACY_ZERO\n");
-    else printf("FAIL LEGITIMACY_ZERO\n>%d\n<%d\n", len, got);
+    /* UPPER_CASE */
+    cs();ft_putstr("A");ce();
+    if(cn==1&&cap[0]=='A')printf("PASS UPPER_CASE\n");else printf("FAIL UPPER_CASE\n>A\n<%.*s\n",cn,cap);
 
-    /* SUPPORT_DECLINING: tabs + spaces mixes */
-    ok = 1;
-    for (i = 0; i < N; i++) {
-        len = 3 + (rand() % 15);
-        for (j = 0; j < len; j++) buf[j] = (rand() % 2) ? ' ' : '\t';
-        buf[len] = 0;
-        got = ft_strlen(buf);
-        if (got != len) { ok = 0; break; }
-    }
-    if (ok) printf("PASS SUPPORT_DECLINING\n");
-    else printf("FAIL SUPPORT_DECLINING\n>%d\n<%d\n", len, got);
+    /* PRINTABLE_CHARS */
+    ok=1;
+    for(i=0;i<N;i++){len=1+(rand()%10);for(j=0;j<len;j++)buf[j]=' ';buf[len]=0;
+    cs();ft_putstr(buf);ce();if(cn!=len){ok=0;break;}}
+    if(ok)printf("PASS PRINTABLE_CHARS\n");else printf("FAIL PRINTABLE_CHARS\n>%d spaces\n<%d chars\n",len,cn);
 
-    /* ALIBI_THIN: only digits */
-    ok = 1;
-    for (i = 0; i < N; i++) {
-        len = 1 + (rand() % 30);
-        for (j = 0; j < len; j++) buf[j] = '0' + (rand() % 10);
-        buf[len] = 0;
-        got = ft_strlen(buf);
-        if (got != len) { ok = 0; break; }
-    }
-    if (ok) printf("PASS ALIBI_THIN\n");
-    else printf("FAIL ALIBI_THIN\n>%d\n<%d\n", len, got);
+    /* NEWLINES */
+    ok=1;
+    for(i=0;i<N;i++){len=1+(rand()%10);for(j=0;j<len;j++)buf[j]='\t';buf[len]=0;
+    cs();ft_putstr(buf);ce();if(cn!=len){ok=0;break;}}
+    if(ok)printf("PASS NEWLINES\n");else printf("FAIL NEWLINES\n>%d tabs\n<%d chars\n",len,cn);
 
-    /* EXCUSE_SHORT: special characters */
-    ok = 1;
-    for (i = 0; i < N; i++) {
-        char sym[] = "!@#$%^&*()_+-=[]{}|;:,.<>?/~";
-        int sl = strlen(sym);
-        len = 5 + (rand() % 20);
-        for (j = 0; j < len; j++) buf[j] = sym[rand() % sl];
-        buf[len] = 0;
-        got = ft_strlen(buf);
-        if (got != len) { ok = 0; break; }
-    }
-    if (ok) printf("PASS EXCUSE_SHORT\n");
-    else printf("FAIL EXCUSE_SHORT\n>%d\n<%d\n", len, got);
+    /* NULL_BYTES */
+    cs();ft_putstr("Line1\nLine2\n");ce();
+    if(cn==12&&memcmp(cap,"Line1\nLine2\n",12)==0)printf("PASS NULL_BYTES\n");
+    else printf("FAIL NULL_BYTES\n>Line1\\nLine2\\n\n<%.*s\n",cn,cap);
 
-    /* CREDIBILITY_NULL: strings with embedded newlines/tabs */
-    ok = 1;
-    for (i = 0; i < N; i++) {
-        len = 5 + (rand() % 15);
-        for (j = 0; j < len; j++) {
-            int r = rand() % 4;
-            if (r == 0) buf[j] = '\t';
-            else if (r == 1) buf[j] = '\n';
-            else buf[j] = 'a' + (rand() % 26);
-        }
-        buf[len] = 0;
-        got = ft_strlen(buf);
-        if (got != len) { ok = 0; break; }
-    }
-    if (ok) printf("PASS CREDIBILITY_NULL\n");
-    else printf("FAIL CREDIBILITY_NULL\n>%d\n<%d\n", len, got);
+    /* NORM_SCALE_X */
+    ok=1;
+    for(i=0;i<N;i++){len=2+(rand()%8);for(j=0;j<len;j++)buf[j]='0'+(rand()%10);buf[len]=0;
+    cs();ft_putstr(buf);ce();if(cn!=len||memcmp(cap,buf,len)!=0){ok=0;break;}}
+    if(ok)printf("PASS NORM_SCALE_X\n");else printf("FAIL NORM_SCALE_X\n>%s\n<%.*s\n",buf,cn,cap);
 
-    /* PATIENCE_GONE: full random printable 1-500 chars */
-    ok = 1;
-    for (i = 0; i < N; i++) {
-        len = 1 + (rand() % 500);
-        for (j = 0; j < len; j++) buf[j] = 1 + (rand() % 126);
-        buf[len] = 0;
-        got = ft_strlen(buf);
-        if (got != len) { ok = 0; break; }
-    }
-    if (ok) printf("PASS PATIENCE_GONE\n");
-    else printf("FAIL PATIENCE_GONE\n>%d\n<%d\n", len, got);
+    /* NORM_NEG_XY */
+    ok=1;{char sym[]="!@#$%^&*()";int sl=strlen(sym);
+    for(i=0;i<N;i++){len=3+(rand()%10);for(j=0;j<len;j++)buf[j]=sym[rand()%sl];buf[len]=0;
+    cs();ft_putstr(buf);ce();if(cn!=len||memcmp(cap,buf,len)!=0){ok=0;break;}}}
+    if(ok)printf("PASS NORM_NEG_XY\n");else printf("FAIL NORM_NEG_XY\n>%s\n<%.*s\n",buf,cn,cap);
 
+    unlink(CAP);
     return 0;
 }
 EOF
 
-compile_files "$BIN" "$RENDU/ft_strlen.c" "$MAIN"
+compile_files "$BIN" "$RENDU/ft_putstr.c" "$MAIN"
 if [ $? -ne 0 ]; then rm -f "$MAIN" "$BIN"; print_results; exit 1; fi
 
 OUTPUT=$(timeout 10 "$BIN" 2>/dev/null)

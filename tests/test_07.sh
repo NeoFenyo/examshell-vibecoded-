@@ -35,7 +35,7 @@ int main(void) {
     srand(time(NULL));
     int i, ok, min, max, *r;
 
-    /* BORDER_ILLEGAL: 10 random min < max positive ranges */
+    /* BASIC_RANGE: 10 random min < max positive ranges */
     ok = 1;
     for (i = 0; i < N; i++) {
         min = rand() % 50; max = min + 1 + (rand() % 20);
@@ -43,10 +43,10 @@ int main(void) {
         if (!r || !check_range(r, min, max)) { ok = 0; break; }
         free(r);
     }
-    if (ok) printf("PASS BORDER_ILLEGAL\n");
-    else printf("FAIL BORDER_ILLEGAL\n>range(%d,%d) valid\n<NULL or wrong values\n", min, max);
+    if (ok) printf("PASS BASIC_RANGE\n");
+    else printf("FAIL BASIC_RANGE\n>range(%d,%d) valid\n<NULL or wrong values\n", min, max);
 
-    /* NO_BOUNDARY: 10 negative ranges */
+    /* NEGATIVE_RANGE: 10 negative ranges */
     ok = 1;
     for (i = 0; i < N; i++) {
         max = -(rand() % 10); min = max - 1 - (rand() % 20);
@@ -54,30 +54,30 @@ int main(void) {
         if (!r || !check_range(r, min, max)) { ok = 0; break; }
         free(r);
     }
-    if (ok) printf("PASS NO_BOUNDARY\n");
-    else printf("FAIL NO_BOUNDARY\n>range(%d,%d) valid\n<NULL or wrong values\n", min, max);
+    if (ok) printf("PASS NEGATIVE_RANGE\n");
+    else printf("FAIL NEGATIVE_RANGE\n>range(%d,%d) valid\n<NULL or wrong values\n", min, max);
 
-    /* EXPANSION_ENDLESS: min == max should return NULL */
+    /* ZERO_CROSS_RANGE: min == max should return NULL */
     ok = 1;
     for (i = 0; i < N; i++) {
         int v = (rand() % 200) - 100;
         r = ft_range(v, v);
         if (r != NULL) { ok = 0; min = v; max = v; free(r); break; }
     }
-    if (ok) printf("PASS EXPANSION_ENDLESS\n");
-    else printf("FAIL EXPANSION_ENDLESS\n>NULL\n<non-NULL for range(%d,%d)\n", min, max);
+    if (ok) printf("PASS ZERO_CROSS_RANGE\n");
+    else printf("FAIL ZERO_CROSS_RANGE\n>NULL\n<non-NULL for range(%d,%d)\n", min, max);
 
-    /* SETTLEMENT_CREEP: min > max should return NULL */
+    /* INVALID_MIN_MAX: min > max should return NULL */
     ok = 1;
     for (i = 0; i < N; i++) {
         min = 10 + (rand() % 50); max = min - 1 - (rand() % 20);
         r = ft_range(min, max);
         if (r != NULL) { ok = 0; free(r); break; }
     }
-    if (ok) printf("PASS SETTLEMENT_CREEP\n");
-    else printf("FAIL SETTLEMENT_CREEP\n>NULL\n<non-NULL for range(%d,%d)\n", min, max);
+    if (ok) printf("PASS INVALID_MIN_MAX\n");
+    else printf("FAIL INVALID_MIN_MAX\n>NULL\n<non-NULL for range(%d,%d)\n", min, max);
 
-    /* ANNEX_MORE: ranges of 2 elements */
+    /* EMPTY_RANGE: ranges of 2 elements */
     ok = 1;
     for (i = 0; i < N; i++) {
         min = (rand() % 200) - 100; max = min + 1;
@@ -85,10 +85,10 @@ int main(void) {
         if (!r || r[0] != min || r[1] != max) { ok = 0; break; }
         free(r);
     }
-    if (ok) printf("PASS ANNEX_MORE\n");
-    else printf("FAIL ANNEX_MORE\n>%d %d\n<%d %d\n", min, min+1, r?r[0]:-1, r?r[1]:-1);
+    if (ok) printf("PASS EMPTY_RANGE\n");
+    else printf("FAIL EMPTY_RANGE\n>%d %d\n<%d %d\n", min, min+1, r?r[0]:-1, r?r[1]:-1);
 
-    /* GREEN_LINE_ERASED: ranges crossing zero */
+    /* SINGLE_ELEM_RANGE: ranges crossing zero */
     ok = 1;
     for (i = 0; i < N; i++) {
         min = -(1 + (rand() % 10)); max = 1 + (rand() % 10);
@@ -96,10 +96,10 @@ int main(void) {
         if (!r || !check_range(r, min, max)) { ok = 0; break; }
         free(r);
     }
-    if (ok) printf("PASS GREEN_LINE_ERASED\n");
-    else printf("FAIL GREEN_LINE_ERASED\n>range(%d,%d) valid\n<wrong values\n", min, max);
+    if (ok) printf("PASS SINGLE_ELEM_RANGE\n");
+    else printf("FAIL SINGLE_ELEM_RANGE\n>range(%d,%d) valid\n<wrong values\n", min, max);
 
-    /* BUFFER_STOLEN: larger ranges 50-100 elements */
+    /* LARGE_RANGE: larger ranges 50-100 elements */
     ok = 1;
     for (i = 0; i < N; i++) {
         min = (rand() % 100) - 50; max = min + 50 + (rand() % 51);
@@ -107,10 +107,10 @@ int main(void) {
         if (!r || !check_range(r, min, max)) { ok = 0; break; }
         free(r);
     }
-    if (ok) printf("PASS BUFFER_STOLEN\n");
-    else printf("FAIL BUFFER_STOLEN\n>range(%d,%d) valid\n<wrong values\n", min, max);
+    if (ok) printf("PASS LARGE_RANGE\n");
+    else printf("FAIL LARGE_RANGE\n>range(%d,%d) valid\n<wrong values\n", min, max);
 
-    /* GOLAN_GRABBED: min = 0, max varies */
+    /* SAME_BOUNDS: min = 0, max varies */
     ok = 1;
     for (i = 0; i < N; i++) {
         max = 1 + (rand() % 30);
@@ -118,10 +118,10 @@ int main(void) {
         if (!r || !check_range(r, 0, max)) { ok = 0; min = 0; break; }
         free(r);
     }
-    if (ok) printf("PASS GOLAN_GRABBED\n");
-    else printf("FAIL GOLAN_GRABBED\n>range(0,%d) valid\n<wrong values\n", max);
+    if (ok) printf("PASS SAME_BOUNDS\n");
+    else printf("FAIL SAME_BOUNDS\n>range(0,%d) valid\n<wrong values\n", max);
 
-    /* WEST_BANK_GONE: fully negative ranges */
+    /* RANDOM_BOUNDS: fully negative ranges */
     ok = 1;
     for (i = 0; i < N; i++) {
         min = -(50 + (rand() % 50)); max = min + 1 + (rand() % 30);
@@ -131,10 +131,10 @@ int main(void) {
         if (!r || !check_range(r, min, max)) { ok = 0; break; }
         free(r);
     }
-    if (ok) printf("PASS WEST_BANK_GONE\n");
-    else printf("FAIL WEST_BANK_GONE\n>range(%d,%d) valid\n<wrong values\n", min, max);
+    if (ok) printf("PASS RANDOM_BOUNDS\n");
+    else printf("FAIL RANDOM_BOUNDS\n>range(%d,%d) valid\n<wrong values\n", min, max);
 
-    /* OCCUPATION_RANGE: fully random valid/invalid ranges */
+    /* MIXED_BOUNDS: fully random valid/invalid ranges */
     ok = 1;
     for (i = 0; i < N; i++) {
         min = (rand() % 200) - 100;
@@ -143,8 +143,8 @@ int main(void) {
         if (!r || !check_range(r, min, max)) { ok = 0; break; }
         free(r);
     }
-    if (ok) printf("PASS OCCUPATION_RANGE\n");
-    else printf("FAIL OCCUPATION_RANGE\n>range(%d,%d) valid\n<wrong values\n", min, max);
+    if (ok) printf("PASS MIXED_BOUNDS\n");
+    else printf("FAIL MIXED_BOUNDS\n>range(%d,%d) valid\n<wrong values\n", min, max);
 
     return 0;
 }

@@ -1,0 +1,29 @@
+Assignment name : mini_rt
+Expected files  : mini_rt.c
+Allowed functions: write, malloc, free, sqrt (math.h)
+Header fourni   : ray.h, color.h
+Compiler avec   : -lm
+Prerequis       : TOUS les exercices precedents
+--------------------------------------------------------------------------------
+
+Ecris un PROGRAMME qui genere une image raytraced en PPM sur stdout :
+  ./mini_rt > scene.ppm
+
+Scene fixe :
+  - Image : 400 x 225
+  - Camera : origin (0, 0, 0), regarde vers -Z
+  - Viewport : largeur 3.56, hauteur 2.0, distance focale 1.0
+  - Sphere : centre (0, 0, -3), rayon 1.0, couleur rouge (0.8, 0.2, 0.2)
+  - Sol : grande sphere centre (0, -101, -3), rayon 100, couleur grise (0.5, 0.5, 0.5)
+  - Lumiere : position (2, 3, 0), blanche
+  - Ambient : 0.1
+
+Pour chaque pixel (x, y) :
+  1. Calculer la direction du rayon a travers ce pixel
+  2. Tester intersection avec les deux spheres
+  3. Si touche : calculer normale, diffuse, ombres → couleur finale
+  4. Si rate : sky_color()
+  5. Ecrire le pixel en PPM P3
+
+Le rendu final sera une sphere rouge sur un sol gris avec des ombres
+et un ciel degrade bleu. Felicitations, tu as code un raytracer !

@@ -1,19 +1,19 @@
-Assignment name  : ft_range
-Expected files   : ft_range.c
+Assignment name : ft_range
+Expected files  : ft_range.c
 Allowed functions: malloc
 --------------------------------------------------------------------------------
 
-Écrire une fonction qui retourne un tableau d'entiers. Ce tableau contient
-toutes les valeurs entre min et max inclus, ordonnées de min à max.
+Ecris une fonction qui retourne un tableau de int contenant toutes les
+valeurs entre min et max inclus.
 
 Prototype:
   int *ft_range(int min, int max);
 
-Si min >= max, la fonction retourne NULL.
+- Si min >= max, retourner NULL.
+- Le tableau doit etre alloue avec malloc.
 
-Exemples:
-
-  ft_range(1, 5);     // retourne {1, 2, 3, 4, 5}
-  ft_range(-2, 2);    // retourne {-2, -1, 0, 1, 2}
-  ft_range(0, 0);     // retourne NULL
-  ft_range(5, 1);     // retourne NULL
+Exemple:
+  int *r = ft_range(1, 5);   // r = {1, 2, 3, 4, 5}
+  int *r = ft_range(-2, 2);  // r = {-2, -1, 0, 1, 2}
+  int *r = ft_range(5, 5);   // r = NULL
+  int *r = ft_range(5, 1);   // r = NULL
