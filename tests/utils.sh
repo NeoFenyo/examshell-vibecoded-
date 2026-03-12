@@ -15,14 +15,36 @@ TEST_OK=0
 TEST_KO=0
 TEST_TOTAL=0
 
+# Timeout wrapper multiplateforme
+timeout() {
+    local max_time="$1"
+    shift
+    if command -v timeout >/dev/null 2>&1; then
+        command timeout "$max_time" "$@"
+    elif command -v gtimeout >/dev/null 2>&1; then
+        command gtimeout "$max_time" "$@"
+    else
+        # Fallback pour macOS sans coreutils
+        "$@" &
+        local pid=$!
+        ( sleep "$max_time" && kill -9 $pid 2>/dev/null ) &
+        local watcher=$!
+        wait $pid 2>/dev/null
+        local status=$?
+        kill -9 $watcher 2>/dev/null
+        return $status
+    fi
+}
+
 # Compile avec cc -Wall -Wextra -Werror
 # Usage: compile_files <output> <sources...>
 compile_files() {
     local output="$1"
     shift
-    cc -Wall -Wextra -Werror -o "$output" "$@" 2>/dev/null
+    cc -Wall -Wextra -Werror -Wno-deprecated-declarations -o "$output" "$@" 2> /tmp/examshell_compile.log
     if [ $? -ne 0 ]; then
         echo -e "  ${RED}[COMPILE ERROR]${RESET}"
+        cat /tmp/examshell_compile.log | sed 's/^/    /'
         return 1
     fi
     return 0
