@@ -9,10 +9,13 @@ SUBJECTS_DIR="$SCRIPT_DIR/subjects"
 TESTS_DIR="$SCRIPT_DIR/tests"
 GRADEME="$SCRIPT_DIR/grademe.sh"
 
+# Cleanup rendu (Windows fallback)
 cleanup_rendu() {
-    local win_path
-    win_path=$(echo "$RENDU_DIR" | sed 's|/mnt/\(.\)|\1:|' | sed 's|/|\\|g') 2>/dev/null
-    cmd.exe /c "rd /s /q \"$win_path\"" 2>/dev/null
+    if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+        local win_path
+        win_path=$(echo "$RENDU_DIR" | sed 's|/mnt/\(.\)|\1:|' | sed 's|/|\\|g') 2>/dev/null
+        cmd.exe /c "rd /s /q \"$win_path\"" 2>/dev/null
+    fi
     rm -rf "$RENDU_DIR" 2>/dev/null
 }
 trap cleanup_rendu EXIT

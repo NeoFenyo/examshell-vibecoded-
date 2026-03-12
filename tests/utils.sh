@@ -41,14 +41,20 @@ timeout() {
 compile_files() {
     local output="$1"
     shift
-    cc -Wall -Wextra -Werror -Wno-deprecated-declarations -o "$output" "$@" 2> /tmp/examshell_compile.log
+    if ! command -v cc >/dev/null 2>&1; then
+        echo -e "  ${RED}[ERROR]${RESET} 'cc' (compiler) non trouve."
+        return 1
+    fi
+    local compiler_output
+    compiler_output=$(cc -Wall -Wextra -Werror -Wno-deprecated-declarations -o "$output" "$@" 2>&1)
     if [ $? -ne 0 ]; then
         echo -e "  ${RED}[COMPILE ERROR]${RESET}"
-        cat /tmp/examshell_compile.log | sed 's/^/    /'
+        echo "$compiler_output" | sed 's/^/    /'
         return 1
     fi
     return 0
 }
+
 
 # Parse le protocole de sortie des tests C
 # Format: PASS NAME / FAIL NAME\n>expected\n<got
@@ -120,6 +126,6 @@ print_results() {
 }
 
 cleanup() {
-    rm -f /tmp/examshell_compile.log /tmp/examshell_test_* /tmp/examshell_cap
+    rm -f /tmp/examshell_test_* /tmp/examshell_cap
 }
 trap cleanup EXIT
